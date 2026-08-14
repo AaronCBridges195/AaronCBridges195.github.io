@@ -1,10 +1,309 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-US">
 <head>
-    <title>Aaron C. Bridges - Portfolio</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aaron C. Bridges — Portfolio</title>
+<style>
+  :root {
+    --bg: #0A0E1A;
+    --surface: #121829;
+    --surface-hover: #182036;
+    --accent: #B08D57;
+    --accent-bright: #C9A876;
+    --text-primary: #EDE9DF;
+    --text-secondary: #8E96AC;
+    --hairline: rgba(237, 233, 223, 0.12);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: "Times New Roman", Times, serif;
+    line-height: 1.6;
+    padding: 4rem 1.5rem 6rem;
+  }
+
+  .page {
+    max-width: 780px;
+    margin: 0 auto;
+  }
+
+  /* ---- Header ---- */
+
+  .name {
+    font-size: clamp(2.1rem, 5vw, 3rem);
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    margin: 0 0 0.4rem;
+  }
+
+  .portfolio-title {
+    font-style: italic;
+    color: var(--accent-bright);
+    font-size: 1.15rem;
+    letter-spacing: 0.03em;
+    margin: 0 0 1.5rem;
+  }
+
+  .bio {
+    color: var(--text-secondary);
+    font-size: 1.05rem;
+    max-width: 60ch;
+    margin: 0;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--accent);
+    opacity: 0.5;
+    margin: 3rem 0;
+  }
+
+  /* ---- Section label ---- */
+
+  .section-label {
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin: 0 0 1.5rem;
+  }
+
+  /* ---- Project accordion ---- */
+
+  .projects {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .project {
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .project[open] {
+    background: var(--surface-hover);
+  }
+
+  .project summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 1.1rem 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+    transition: background 0.15s ease;
+  }
+
+  .project summary::-webkit-details-marker { display: none; }
+
+  .project summary:hover {
+    background: var(--surface-hover);
+  }
+
+  .project summary:focus-visible {
+    outline: 2px solid var(--accent-bright);
+    outline-offset: -2px;
+  }
+
+  .index-num {
+    font-style: italic;
+    color: var(--accent);
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    width: 1.6rem;
+  }
+
+  .summary-text {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .project-title {
+    font-weight: 700;
+    font-size: 1.15rem;
+    margin: 0 0 0.2rem;
+  }
+
+  .project-tagline {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin: 0;
+  }
+
+  .chevron {
+    flex-shrink: 0;
+    width: 0.6rem;
+    height: 0.6rem;
+    border-right: 2px solid var(--accent);
+    border-bottom: 2px solid var(--accent);
+    transform: rotate(-45deg);
+    transition: transform 0.2s ease;
+  }
+
+  .project[open] .chevron {
+    transform: rotate(45deg);
+  }
+
+  .project-content {
+    padding: 0 1.4rem 1.6rem;
+    border-top: 1px solid var(--hairline);
+  }
+
+  .project-content-inner {
+    padding-top: 1.4rem;
+  }
+
+  .tech-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0 0 1.3rem;
+  }
+
+  .tech-tag {
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    color: var(--accent-bright);
+    border: 1px solid var(--accent);
+    border-radius: 3px;
+    padding: 0.15rem 0.55rem;
+  }
+
+  .project-description {
+    margin: 0 0 1.2rem;
+    color: var(--text-primary);
+  }
+
+  .project-bullets {
+    margin: 0 0 1.3rem;
+    padding-left: 1.2rem;
+    color: var(--text-secondary);
+  }
+
+  .project-bullets li {
+    margin-bottom: 0.5rem;
+  }
+
+  .screenshot-placeholder {
+    aspect-ratio: 16 / 9;
+    border: 1px dashed var(--hairline);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    font-style: italic;
+    font-size: 0.9rem;
+    margin-bottom: 1.3rem;
+    background: rgba(255,255,255,0.02);
+  }
+
+  .project-links {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .project-links a {
+    color: var(--accent-bright);
+    text-decoration: none;
+    font-size: 0.95rem;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.15s ease;
+  }
+
+  .project-links a:hover,
+  .project-links a:focus-visible {
+    border-bottom-color: var(--accent-bright);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+
+  @media (max-width: 560px) {
+    body { padding: 2.5rem 1rem 4rem; }
+    .project summary { padding: 0.9rem 1rem; }
+    .project-content { padding: 0 1rem 1.3rem; }
+  }
+</style>
 </head>
 <body>
-    <h1>Aaron C. Bridges</h1>
-    <p>Data analysis and dashboard projects.</p>
+  <div class="page">
+
+    <header>
+      <h1 class="name">Aaron C. Bridges</h1>
+      <p class="portfolio-title">Quantitative &amp; Data Analysis Portfolio</p>
+      <p class="bio">
+        Quantitative economics student building end-to-end data pipelines and
+        interactive dashboards at the intersection of finance, data science,
+        and energy policy.
+      </p>
+    </header>
+
+    <hr class="divider">
+
+    <p class="section-label">Projects</p>
+
+    <div class="projects">
+
+      <details class="project">
+        <summary>
+          <span class="index-num">01</span>
+          <span class="summary-text">
+            <p class="project-title">Solar Sector Financial Dashboard</p>
+            <p class="project-tagline">Tracking how solar companies respond financially to federal policy</p>
+          </span>
+          <span class="chevron"></span>
+        </summary>
+        <div class="project-content">
+          <div class="project-content-inner">
+            <div class="tech-tags">
+              <span class="tech-tag">Python</span>
+              <span class="tech-tag">SQL</span>
+              <span class="tech-tag">SQLite</span>
+              <span class="tech-tag">Streamlit</span>
+              <span class="tech-tag">SEC EDGAR API</span>
+            </div>
+
+            <p class="project-description">
+              An interactive dashboard analyzing how solar energy companies'
+              financial performance responds to federal policy changes, built
+              from live SEC filings and market data.
+            </p>
+
+            <ul class="project-bullets">
+              <li>Built a Python ETL pipeline ingesting SEC EDGAR filings and market data for 9 renewable energy companies, resolving inconsistent financial reporting tags across companies and filing-standard transitions</li>
+              <li>Designed a normalized SQLite database and wrote SQL queries using window functions, CTEs, and multi-table joins to calculate revenue growth, margins, and stock returns around policy events</li>
+              <li>Implemented incremental data fetching, automated logging, and error handling for unattended daily refreshes via Windows Task Scheduler</li>
+              <li>Built an interactive Streamlit dashboard with dynamic filtering and layered visualizations comparing company performance against events like the Inflation Reduction Act</li>
+            </ul>
+
+            <!-- Replace this placeholder with an actual screenshot:
+                 <img src="images/solar-dashboard.png" alt="Solar dashboard screenshot" style="width:100%;border-radius:4px;margin-bottom:1.3rem;"> -->
+            <div class="screenshot-placeholder">Screenshot coming soon</div>
+
+            <div class="project-links">
+              <a href="#">View on GitHub</a>
+              <!-- <a href="#">View live dashboard</a> -->
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <!-- To add another project, copy the entire <details class="project">...</details>
+           block above, paste it below this comment, and update index-num, title,
+           tagline, tags, description, bullets, and links. -->
+
+    </div>
+
+  </div>
 </body>
 </html>
